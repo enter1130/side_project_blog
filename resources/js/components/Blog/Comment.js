@@ -1,12 +1,15 @@
 import CloseIcon from '@rsuite/icons/Close';
+import PeopleSpeakerIcon from '@rsuite/icons/PeopleSpeaker';
 import TrashIcon from '@rsuite/icons/Trash';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FcLike } from "react-icons/fc";
 import { GoReply } from "react-icons/go";
 import { Button, ButtonToolbar, Divider, Form, IconButton, Input, Panel } from 'rsuite';
+import { addClass, removeClass } from 'rsuite/esm/DOMHelper';
 import useSWR from 'swr';
 import Cookies from 'universal-cookie';
+
 function Item({comment,result,reply,bg}){
     function sendLike(data){
         fetch(`/api/comment.like`,{
@@ -52,9 +55,18 @@ function Item({comment,result,reply,bg}){
     const onReply = () => {
         reply(comment.id)
     }
+
+    const showComment =(id)=>{
+        window.location.href=`#comment_${id}`
+        let element=document.getElementById(`comment_${id}`);
+        addClass(element,'animate__pulse')
+        setTimeout(() => {
+            removeClass(element,'animate__pulse')
+        }, 1000);
+    }
     return(
-        <Panel bordered header={'留言'+comment.id} className='mt-3' style={{'backgroundColor':bg==comment.id?('rgba(255, 215, 236, 0.8)'):'white'}}>
-            {comment.CommentID?(<div className='mb-3'>回覆給<span style={{fontWeight:'bold'}}>留言{comment.CommentID}</span>:</div>):null}
+        <Panel bordered header={'留言'+comment.id} id={`comment_${comment.id}`} className='mt-3 animate__animated animate__faster' style={{'backgroundColor':bg==comment.id?('rgba(255, 215, 236, 0.8)'):'#fff'}}>
+            {comment.CommentID?(<div className='mb-3'>回覆給<span style={{fontWeight:'bold',cursor:'pointer',color:'red'}} onClick={()=>showComment(comment.CommentID)}>留言{comment.CommentID}</span>:</div>):null}
             <div style={{minHeight:'50px'}}>{comment.comment}</div>
             <div className='d-flex justify-content-between align-items-center'>
                 <div className='d-flex align-items-center'>
@@ -65,7 +77,7 @@ function Item({comment,result,reply,bg}){
                     <span className='ms-2'>{comment.like}</span>
                 </div>
                 <div className='d-flex align-items-center'>
-                    <div className='text-end'>{comment.date} by 匿名</div>
+                    <div className='text-end'>{comment.date} by 匿名<PeopleSpeakerIcon className='mx-2' /></div>
                     {cookie.get('token')?(<ButtonToolbar>
                         <IconButton size="xs" icon={<TrashIcon />} circle onClick={onDelete} />
                     </ButtonToolbar>):null}
@@ -142,7 +154,7 @@ function Comment({id}) {
             </div>
             <Form className='mt-3' onSubmit={handleSubmit(onSubmit)}>
                 <Form.Group>
-                    <Form.ControlLabel>{reply?(<>回覆給留言<span style={{fontWeight:'bold'}}>{reply}</span><IconButton className='ms-2' size="xs" icon={<CloseIcon />} circle onClick={()=>setReply(null)} /></>):null}</Form.ControlLabel>
+                    <Form.ControlLabel>{reply?(<>回覆給<span style={{fontWeight:'bold',color:'red'}}>留言{reply}</span><IconButton className='ms-2' size="xs" icon={<CloseIcon />} circle onClick={()=>setReply(null)} /></>):null}</Form.ControlLabel>
                     <Input as="textarea" rows={3} id='comment' />
                     <Button appearance="primary" className='mt-3' type='submit' block>留言</Button>
                 </Form.Group>

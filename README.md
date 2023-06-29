@@ -62,3 +62,18 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# 2023-6-28 v1.0.0
+## 新增功能
+- 新增留言功能
+- 新增回覆留言功能
+- 新增刪除留言功能
+- 新增喜歡留言功能
+- 新增查閱人數顯示、按讚顯示等功能
+- 新增登入功能
+
+# 2023-6-29 v1.1.0
+## 新增功能
+- 新增用戶基本功能
+- 新增標籤功能
+- 調整UI等

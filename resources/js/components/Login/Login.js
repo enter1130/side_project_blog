@@ -1,6 +1,6 @@
 import AdminIcon from '@rsuite/icons/Admin';
+import ExitIcon from '@rsuite/icons/Exit';
 import GearIcon from '@rsuite/icons/Gear';
-import OffIcon from '@rsuite/icons/Off';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Avatar, Button, Form, Modal, Nav } from 'rsuite';
@@ -76,8 +76,8 @@ function Login() {
         <Nav.Menu title={<Avatar circle src={user.avatar} />}>
             <Nav.Item icon={<AdminIcon />}>{user.username}</Nav.Item>
             <Nav.Item icon={<GearIcon />} as={'a'} href='/admin'>後台</Nav.Item>
-            <Nav.Item icon={<AdminIcon />} as={'a'} href='/userinfo'>個人資料</Nav.Item>
-            <Nav.Item icon={<OffIcon />} as={'a'} onClick={getLogout}>登出</Nav.Item>
+            <Nav.Item icon={<AdminIcon />} as={'a'} href='/user'>個人資料</Nav.Item>
+            <Nav.Item icon={<ExitIcon />} as={'a'} onClick={getLogout}>登出</Nav.Item>
         </Nav.Menu>
     )
     return (

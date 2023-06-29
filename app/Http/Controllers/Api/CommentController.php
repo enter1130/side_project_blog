@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -31,19 +32,24 @@ class CommentController extends Controller
 
     public function like(Request $request){
         $comment=Comment::find($request->CommentID);
-        $comment->like=$comment->like+1;
-        $query=$comment->save();
-        if($query){
-            return response()->json(['result'=>true]);
+        if($comment){
+            $comment->like=$comment->like+1;
+            $query=$comment->save();
+            if($query){
+                return response()->json(['result'=>true]);
+            }
         }
         return response()->json(['result'=>false]);
     }
 
     public function delete(Request $request){
+        $user=Auth::user();
         $comment=Comment::find($request->CommentID);
-        $query=$comment->delete();
-        if($query){
-            return response()->json(['result'=>true]);
+        if($comment && $user){
+            $query=$comment->delete();
+            if($query){
+                return response()->json(['result'=>true]);
+            }
         }
         return response()->json(['result'=>false]);
     }

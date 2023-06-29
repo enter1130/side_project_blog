@@ -6,11 +6,12 @@ import Admin from './Admin/Admin';
 import Blog from './Blog/Blog';
 import Home from './Home/Home';
 import Menu from './Menu';
+import User from './User/User';
 function Index() {
 
     const [data,setData]=useState(null)
     function getData(){
-        fetch('/api/data.get',{
+        fetch('/api/blog.get',{
             method:'GET'
         }).then(response=>{
             return response.json()
@@ -32,6 +33,7 @@ function Index() {
             <Routes>
                 <Route index path='/' element={<Home user={data.user} blog={data.blog} />} />
                 <Route path='/about' element={<About user={data.user} />} />
+                <Route path='/user' element={<User />} />
                 <Route path='/blog/:id' element={<Blog />} />
                 <Route path='/admin' element={<Admin />} />
             </Routes>
