@@ -23,10 +23,13 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class,'login']);
 Route::get('/logout', [AuthController::class,'logout']);
 Route::get('/auth', [AuthController::class,'auth']);
-Route::get('/blog.get', [BlogController::class,'index']);
 
 Route::post('/user.avatar.preview', [UserController::class,'avatar']);
 Route::post('/user.send', [UserController::class,'update']);
+
+Route::get('/blog.get', [BlogController::class,'index']);
+Route::get('/blog.user.get', [BlogController::class,'user']);
+Route::post('/blog.user.send', [BlogController::class,'store']);
 
 Route::get('/blog.get/{id}', [BlogController::class,'show']);
 Route::post('/blog.like', [BlogController::class,'like']);

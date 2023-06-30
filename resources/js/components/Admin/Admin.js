@@ -1,11 +1,10 @@
 import React from 'react';
-import { FlexboxGrid } from 'rsuite';
+import UserBlog from './Blog/UserBlog';
 
 function Admin() {
     return (
         <div className='container'>
-            <FlexboxGrid className='px-3' justify='space-around'>
-            </FlexboxGrid>
+            <UserBlog />
         </div>
     );
 }

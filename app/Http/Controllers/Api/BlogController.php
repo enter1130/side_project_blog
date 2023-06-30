@@ -13,7 +13,7 @@ class BlogController extends Controller
 {
     public function index(){
         $user=User::find(1);
-        $blog=Blog::all();
+        $blog=Blog::orderBy('date','desc')->get();
         foreach($blog as $item){
             $tag=$item->tag();
             $item['tag']=$tag;
@@ -25,6 +25,38 @@ class BlogController extends Controller
         return response()->json(['result'=>false]);
     }
 
+    public function user(Request $request){
+        $user=Auth::user();
+        if($user){
+            $blog=Blog::orderBy('date','desc')->where('UserID',$user->id)->get();
+            foreach($blog as $item){
+                $tag=$item->tag();
+                $item['tag']=$tag;
+            }
+            
+            if($blog){
+                return response()->json(['result'=>true,'blog'=>$blog]);
+            }
+        }
+        
+        return response()->json(['result'=>false]);
+    }
+
+    public function store(Request $request){
+        $user=Auth::user();
+        if($user){
+            $blog=new Blog();
+            $blog->title=$request->title;
+            $blog->cover=$request->cover;
+            $blog->show=(int)$request->show;
+            $blog->show=(int)$request->show;
+            $blog->content=(int)$request->content;
+
+            dd((int)$request->show);
+        }
+        
+        return response()->json(['result'=>false]);
+    }
     public function show($id){
         $blog=Blog::find($id);
         if($blog){            

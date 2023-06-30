@@ -19,6 +19,8 @@ class CreateBlogTable extends Migration
             $table->longText('content');
             $table->integer('like')->default(0);
             $table->integer('look')->default(0);
+            $table->integer('UserID')->default(1);
+            $table->integer('show')->default(1);
             $table->string('date');
             $table->string('cover')->nullable();
             $table->string('tag')->nullable();

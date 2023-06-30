@@ -35,8 +35,8 @@ function Item({item}){
                         </div>
                     </div>
                 </Col>
-                <Col md={8}>
-                    <div className='text-center ms-2'>
+                <Col md={8} className='d-none d-sm-block'>
+                    <div className='text-center'>
                         <img src={item.cover} className='img-fluid rounded' />
                     </div>
                 </Col>
