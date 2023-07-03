@@ -19,6 +19,7 @@ class CreateCommentTable extends Migration
             $table->integer('like')->default(0);
             $table->string('date');
             $table->integer('BlogID');
+            $table->integer('UserID')->nullable();
             $table->integer('CommentID')->nullable();
             $table->timestamps();
             $table->softDeletes();

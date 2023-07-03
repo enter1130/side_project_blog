@@ -1,14 +1,13 @@
 import { Icon } from '@rsuite/icons';
-import PlusIcon from '@rsuite/icons/Plus';
+import EditIcon from '@rsuite/icons/Edit';
 import VisibleIcon from '@rsuite/icons/Visible';
 import FacebookOfficialIcon from '@rsuite/icons/legacy/FacebookOfficial';
 import TwitterIcon from '@rsuite/icons/legacy/Twitter';
 import React, { useEffect, useState } from 'react';
 import { FcLike } from "react-icons/fc";
-import { Breadcrumb, ButtonToolbar, Divider, IconButton, Input, Placeholder, Stack, Tag } from 'rsuite';
+import { Breadcrumb, Button, ButtonToolbar, Divider, IconButton, Placeholder, Stack, Tag } from 'rsuite';
 import Cookies from 'universal-cookie';
 import Comment from './Comment';
-
 function Loading({image}){
     if(image) return(<><Placeholder.Graph active /><Placeholder.Paragraph rows={15} /></>)
     return(<Placeholder.Paragraph rows={1} />)
@@ -16,85 +15,41 @@ function Loading({image}){
 
 function Item({item,result}){
     const [tags, setTags] = useState([]);
-    const [typing, setTyping] = useState(false);
-    const [inputValue, setInputValue] = useState('');
-    const cookie=new Cookies();
     useEffect(()=>{
         setTags(item.tag)
     },[item])
-    function sendTag(data){
-        fetch(`/api/blog.tag.add`,{
-            method:'POST',
-            body:data,
-            headers: {
-                'Authorization': cookie.get('token'),
-                'X-FP-API-KEY': 'iphone', //it can be iPhone or your any other attribute
-            }
-        }).then(response=>{
-            return response.json()
-        }).then(res=>{
-            if(res.result){
-                result(res.result)
-                setTyping(false);
-            }
-        })
-    }
-    const onTag = () => {
-        let data=new FormData();
-        data.append('BlogID',item.id);
-        data.append('tag',document.getElementById('tag').value);
-        sendTag(data)
-    }
-
-    function deleteTag(data){
-        fetch(`/api/blog.tag.delete`,{
-            method:'POST',
-            body:data,
-            headers: {
-                'Authorization': cookie.get('token'),
-                'X-FP-API-KEY': 'iphone', //it can be iPhone or your any other attribute
-            }
-        }).then(response=>{
-            return response.json()
-        }).then(res=>{
-            if(res.result){
-                result(res.result)
-            }
-        })
-    }
-    const removeTag=(id)=>{
-        let data=new FormData();
-        data.append('BlogID',item.id);
-        data.append('tag',id);
-        deleteTag(data)
-    }
 
     return(
         <>
-            <div style={{minHeight:'50vh'}}>{item.content}</div>
+            <div style={{minHeight:'50vh'}}><div dangerouslySetInnerHTML={{__html: item.content}} /></div>
             <Stack wrap spacing={6}>
                 {tags.map((element)=>(
-                    <Tag closable={cookie.get('token')?true:false} onClose={() => removeTag(element.id)} style={{color:element.color,border:'1px solid',borderColor:element.color,backgroundColor:'#fff'}} key={element.id}>{element.name}</Tag>
+                    <Tag style={{color:element.color,border:'1px solid',borderColor:element.color,backgroundColor:'#fff'}} key={element.id}>{element.name}</Tag>
                 ))}
-                {
-                    cookie.get('token')?(!typing?(<IconButton className="tag-add-btn" onClick={()=>setTyping(true)} icon={<PlusIcon />} appearance="ghost" size="xs" />):<Input className="tag-input" size="xs" id='tag' style={{ width: 70 }} value={inputValue} onChange={setInputValue} onBlur={onTag} onPressEnter={onTag} />):null
-                }
             </Stack>
         </>
     )
 }
 
 function Blog() {
+    const cookie=new Cookies()
     const [data,setData]=useState(null)
+    const [permission,setPermission]=useState(false)
     function getData(){
         let url=window.location.pathname
         fetch(`/api/blog.get/${url.split("/")[2]}`,{
-            method:'GET'
+            method:'GET',
+            headers: {
+                'Authorization': cookie.get('token'),
+                'X-FP-API-KEY': 'iphone', //it can be iPhone or your any other attribute
+                'Content-Type': 'application/json'
+            }
         }).then(response=>{
             return response.json()
         }).then(res=>{
             if(res.result){
                 setData(res.blog)
+                setPermission(res.permission)
             }
         })
     }
@@ -136,7 +91,12 @@ function Blog() {
                     <Breadcrumb.Item href="/">Home</Breadcrumb.Item>
                     <Breadcrumb.Item active>{data.title}</Breadcrumb.Item>
                 </Breadcrumb>):<Loading image={false} />}
-                <h1>{data?(data.title):<Loading image={false} />}</h1>
+                <div className='d-flex justify-content-between pb-3 align-items-end'>
+                    <h1>{data?(data.title):<Loading image={false} />}</h1>
+                    {permission?(<ButtonToolbar>
+                        <Button size="lg" onClick={()=>window.location.href=`/blog.update/${data.id}`} startIcon={<EditIcon />}>修改</Button>
+                    </ButtonToolbar>):null}
+                </div>
                 <div className='d-flex justify-content-between mt-3'>
                     <div className='d-flex align-items-center'>
                     {data?(<ButtonToolbar>

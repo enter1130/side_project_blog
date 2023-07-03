@@ -92,10 +92,10 @@ function Item({user,result}){
         data.append('username',document.getElementById('username').value);
         data.append('email',document.getElementById('email').value);
         data.append('avatar',avatar);
-        sendUser(data)
+        updateUser(data)
     }
-    function sendUser(data){
-        fetch('/api/user.send',{
+    function updateUser(data){
+        fetch('/api/user.update',{
             method:'POST',
             body:data,
             headers: {
@@ -175,6 +175,17 @@ function Item({user,result}){
                             </Col>
                             <Col xs={24} sm={12} md={16}>
                                 <Input id='email' size='lg' type={'email'} disabled={!edit} defaultValue={user.email} required />
+                            </Col>
+                        </Row>
+                    </Form.Group>
+                    <Form.Group>
+                        <Row>
+                            <Col className='ps-3' xs={24} sm={12} md={8}>
+                                <h5>個人介紹</h5>
+                                <Form.HelpText>個人介紹，字數不可超過500個字</Form.HelpText>
+                            </Col>
+                            <Col xs={24} sm={12} md={16}>
+                                <Input as="textarea" rows={5}  id='description' size='lg' type={'text'} disabled={!edit} defaultValue={user.description} required />
                             </Col>
                         </Row>
                     </Form.Group>

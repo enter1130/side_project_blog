@@ -20,7 +20,7 @@ class UserController extends Controller
             $user=User::find($user->id);
             $user->username=$request->username;
             $user->email=$request->email;
-            $user->avatar=$this->upload($request,$user);
+            $user->avatar=$user->addAvatar($request);
             $query=$user->save();
             if($query){
                 return response()->json(['result'=>true]);
@@ -29,15 +29,5 @@ class UserController extends Controller
         return response()->json(['result'=>false]);
     }
 
-    public function upload(Request $request,$user){
-        if($request->file('avatar')){
-            $path=$request->file('avatar')->storeAs('avatar',$request->file('avatar')->getClientOriginalName(),'public');
-            if($path){
-                Storage::disk('local')->delete(str_replace('/storage/','/public/',$user->avatar));
-                return '/storage/'.$path;
-            }
-        }
-
-        return $user->avatar;
-    }
+    
 }

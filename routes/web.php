@@ -20,3 +20,4 @@ Route::get('/about',[HomeController::class,'view'])->name('about');
 Route::get('/blog/{id?}',[HomeController::class,'view'])->name('blog');
 Route::get('/admin',[HomeController::class,'view'])->name('admin');
 Route::get('/blog.create',[HomeController::class,'view'])->name('blog_create');
+Route::get('/blog.update/{id?}',[HomeController::class,'view'])->name('blog_update');

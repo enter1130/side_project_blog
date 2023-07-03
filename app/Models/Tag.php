@@ -10,4 +10,13 @@ class Tag extends Model
 {
     use HasFactory,SoftDeletes;
     protected $table='tag';
+
+    public function tag(){
+        $result=array();
+        foreach(Tag::all() as $item){
+            array_push($result,array('label'=>$item->name,'value'=>$item->name));
+        }
+
+        return $result;
+    }
 }

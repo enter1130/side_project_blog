@@ -22,22 +22,24 @@ function Item({item}){
     return(
         <Panel className='m-2' header={<div className='d-flex justify-content-between align-items-end flex-row'><h3>{item.title}</h3><h6 className='text-muted'>{item.date}</h6></div>} bordered style={{cursor:'pointer'}} onClick={()=>window.location.href=`/blog/${item.id}`}>
             <Row>
-                <Col md={16}>
-                    <div style={{minHeight:'150px'}}>{item.content}</div>
+                <Col xs={24} sm={24} md={8}>
+                    <div className='text-center'>
+                        <img src={item.cover} className='img-fluid rounded' />
+                    </div>
+                </Col>
+                <Col xs={24} sm={24} md={16} className='home my-1'>
+                    <div className=' over-line' style={{minHeight:'150px'}}><div dangerouslySetInnerHTML={{__html: item.content}} /></div>
+                </Col>
+                <Col xs={24} sm={24} md={24}>
                     <div className='d-flex align-items-end flex-column'>
                         <div className='d-flex align-items-center'>
-                        {item?(<TagGroup className='mb-3'>
+                        {item?(<TagGroup>
                             {item.tag.map((element,i)=>(
                                 i<=2?(<Tag style={{color:element.color,border:'1px solid',borderColor:element.color,backgroundColor:'#fff'}} key={element.id}>{element.name}</Tag>):null
                             ))}
                             {item.tag.lenght>3?(<Tag style={{color:'red',border:'1px solid',borderColor:'red',backgroundColor:'#fff'}} >{'更多⋯⋯'}</Tag>):null}
                         </TagGroup>):null}
                         </div>
-                    </div>
-                </Col>
-                <Col md={8} className='d-none d-sm-block'>
-                    <div className='text-center'>
-                        <img src={item.cover} className='img-fluid rounded' />
                     </div>
                 </Col>
             </Row>
@@ -51,12 +53,30 @@ function Main({blog}){
     return(blogs!=null?(blogs.map((item)=>(<Item key={item.id} item={item} />))):<Loading />)
 }
 
-function Home({user,blog}) {
+function Home() {
+    const [data,setData]=useState(null)
+    function getData(){
+        fetch('/api/blog.get',{
+            method:'GET'
+        }).then(response=>{
+            return response.json()
+        }).then(res=>{
+            if(res.result){
+                setData(res)
+            }
+        })
+    }
+
+    useEffect(()=>{
+        getData()
+    },[])
+    
+    if(!data) return(<></>)
     return (
         <div className='container'>
             <Row className='px-3'>
-                <Col md={18} className='p-3'><Main blog={blog} /></Col>
-                <Col md={6} className='p-3'><About user={user} /></Col>
+                <Col lg={18} className='p-3'><Main blog={data.blog} /></Col>
+                <Col xsHidden smHidden mdHidden lg={6} className='p-3'><About user={data.user} /></Col>
             </Row>
         </div>
     );
